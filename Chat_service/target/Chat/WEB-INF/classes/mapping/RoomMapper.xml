@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.mapper.RoomMapper">
+  <resultMap id="BaseResultMap" type="com.pojo.Room">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastupdatetime" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="service_id" jdbcType="INTEGER" property="serviceId" />
+    <result column="room_name" jdbcType="VARCHAR" property="roomName" />
+    <result column="room_description" jdbcType="VARCHAR" property="roomDescription" />
+    <result column="room_icon" jdbcType="VARCHAR" property="roomIcon" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, createtime, lastUpdateTime, group_id, user_id, service_id, room_name, room_description, 
+    room_icon
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_room
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_room
+    where user_id = #{userid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUseridAndGroupId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_room
+    where user_id = #{userid,jdbcType=INTEGER}
+    AND group_id = #{groupid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.pojo.Room">
+    insert into t_room (id, createtime, lastUpdateTime, 
+      group_id, user_id, service_id, 
+      room_name, room_description, room_icon
+      )
+    values (#{id,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{lastupdatetime,jdbcType=TIMESTAMP}, 
+      #{groupId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{serviceId,jdbcType=INTEGER}, 
+      #{roomName,jdbcType=VARCHAR}, #{roomDescription,jdbcType=VARCHAR}, #{roomIcon,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pojo.Room">
+    insert into t_room
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="lastupdatetime != null">
+        lastUpdateTime,
+      </if>
+      <if test="groupId != null">
+        group_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="serviceId != null">
+        service_id,
+      </if>
+      <if test="roomName != null">
+        room_name,
+      </if>
+      <if test="roomDescription != null">
+        room_description,
+      </if>
+      <if test="roomIcon != null">
+        room_icon,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdatetime != null">
+        #{lastupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="serviceId != null">
+        #{serviceId,jdbcType=INTEGER},
+      </if>
+      <if test="roomName != null">
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomDescription != null">
+        #{roomDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="roomIcon != null">
+        #{roomIcon,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pojo.Room">
+    update t_room
+    <set>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdatetime != null">
+        lastUpdateTime = #{lastupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="serviceId != null">
+        service_id = #{serviceId,jdbcType=INTEGER},
+      </if>
+      <if test="roomName != null">
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomDescription != null">
+        room_description = #{roomDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="roomIcon != null">
+        room_icon = #{roomIcon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pojo.Room">
+    update t_room
+    set createtime = #{createtime,jdbcType=TIMESTAMP},
+      lastUpdateTime = #{lastupdatetime,jdbcType=TIMESTAMP},
+      group_id = #{groupId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      service_id = #{serviceId,jdbcType=INTEGER},
+      room_name = #{roomName,jdbcType=VARCHAR},
+      room_description = #{roomDescription,jdbcType=VARCHAR},
+      room_icon = #{roomIcon,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
