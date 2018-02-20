@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.dao.mapper.UserMapper;
 import com.pojo.Room;
 import com.pojo.Service;
 import com.pojo.User;
@@ -27,6 +28,8 @@ public class LogController {
     @Autowired
     private UserService userService;
     @Autowired
+    private UserMapper userMapper;
+    @Autowired
     private ServiceSerivce serviceSerivce;
 
     @RequestMapping("/login")
@@ -40,15 +43,15 @@ public class LogController {
             session.setAttribute("SESSION_USERID", user.getId());
             return resultData;
         } else {
-            ResultData resultData = ResultData.FaileResultData("登录失败！", 411);
-            return resultData;
+            return ResultData.FaileResultData("登录失败！", 411);
         }
 
     }
+
     @RequestMapping("/slogin")
     @ResponseBody
-    public ResultData slogin(HttpSession session,String userName, String password) {
-        Service service = serviceSerivce.loginService(userName,password);
+    public ResultData slogin(HttpSession session, String userName, String password) {
+        Service service = serviceSerivce.loginService(userName, password);
         if (service != null) {
             HashMap<String, Object> stringObjectHashMap = new HashMap<String, Object>();
             stringObjectHashMap.put("service", service);
@@ -56,9 +59,29 @@ public class LogController {
             ResultData resultData = ResultData.SuccessResultData(stringObjectHashMap);
             return resultData;
         } else {
-            ResultData resultData = ResultData.FaileResultData("登录失败！", 411);
-            return resultData;
+            return ResultData.FaileResultData("登录失败！", 411);
         }
+    }
+
+    @RequestMapping("/uhasLogin")
+    @ResponseBody
+    public ResultData uhasLogin(HttpSession session) {
+
+        try {
+            String session_userid = session.getAttribute("SESSION_USERID").toString();
+            if (session_userid != null) {
+
+                User user = userMapper.selectByPrimaryKey(Integer.parseInt(session_userid));
+                HashMap<String, Object> stringObjectHashMap = new HashMap<String, Object>();
+                stringObjectHashMap.put("user", user);
+                return ResultData.SuccessResultData(stringObjectHashMap);
+            } else {
+                return ResultData.FaileResultData("没有登录！", 411);
+            }
+        }catch (Exception e){
+            return ResultData.FaileResultData("", 411);
+        }
+
     }
 
 }

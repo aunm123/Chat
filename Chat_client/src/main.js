@@ -20,10 +20,12 @@ Vue.prototype.fetch = fetch;
 
 
 /* eslint-disable no-new */
-new Vue({
+let mainVue = new Vue({
   el: '#app',
   router,
   store,
   components: { App },
   template: '<App/>'
 });
+
+export default mainVue;

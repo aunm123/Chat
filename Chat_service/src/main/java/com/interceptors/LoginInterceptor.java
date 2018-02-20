@@ -1,9 +1,15 @@
 package com.interceptors;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.pojo.ResultData;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.*;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object
@@ -11,8 +17,25 @@ public class LoginInterceptor implements HandlerInterceptor {
         String host = request.getRemoteHost();
         String url = request.getRequestURI();
 
-//        request.getCookies();
-//        response.sendRedirect("/");
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            // 使用userName区分WebSocketHandler，以便定向发送消息
+            try {
+                String userName = session.getAttribute("SESSION_USERID").toString();
+                Integer userid  = Integer.parseInt(userName);
+            }catch (Exception e){
+                try {
+                    String toJSONString = JSON.toJSONString(ResultData.FaileResultData("请先登录",102));
+                    response.setContentType("application/json; charset=utf-8");
+                    PrintWriter out = null;
+                    out = response.getWriter();
+                    out.append(toJSONString);
+                    out.close();
+                }catch (Exception e2){
+                }
+                return false;
+            }
+        }
 
         return true;
     }

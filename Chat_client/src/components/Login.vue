@@ -29,12 +29,17 @@
     },
     name: 'login',
     mounted: function () {
-
+      //尝试获取用户id
+      this.getUserSession()
+        .then(()=>{
+          this.$router.replace('/sl');
+        })
     },
 
     methods: {
       ...mapActions([
-        'loginAction'
+        'loginAction',
+        'getUserSession'
       ]),
       loginClick: function () {
         this.loginAction({

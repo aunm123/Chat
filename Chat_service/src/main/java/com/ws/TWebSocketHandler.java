@@ -31,7 +31,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String username = (String) session.getAttributes().get("WEBSOCKET_USERNAME");
+        String username = session.getAttributes().get("SESSION_USERID").toString();
         // 获取提交过来的消息详情
         System.out.println("user: " + username + "\n message:" + message.toString());
         // 回复一条信息，
@@ -48,7 +48,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         users.add(session);
-        String username = (String) session.getAttributes().get("WEBSOCKET_USERNAME");
+        String username = session.getAttributes().get("SESSION_USERID").toString();
         System.out.println("user: " + username + " Connectione Established");
 
         SystemMessage systemMessage = new SystemMessage(username + " connect");
@@ -64,7 +64,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        String username = (String) session.getAttributes().get("WEBSOCKET_USERNAME");
+        String username = session.getAttributes().get("SESSION_USERID").toString();
         System.out.println("user: " + username + " Connection closed. Status: " + status);
         users.remove(session);
     }
@@ -78,7 +78,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        String username = (String) session.getAttributes().get("WEBSOCKET_USERNAME");
+        String username = session.getAttributes().get("SESSION_USERID").toString();
         if (session.isOpen()) {
             session.close();
         }
@@ -114,7 +114,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
     public void sendMessageToUser(String userName, TextMessage message) {
         System.out.println("one sendMessageToUser :" + message);
         for (WebSocketSession user : users) {
-            if (user.getAttributes().get("WEBSOCKET_USERNAME").equals(userName)) {
+            if (user.getAttributes().get("SESSION_USERID").equals(userName)) {
                 try {
                     if (user.isOpen()) {
                         user.sendMessage(message);
@@ -144,7 +144,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
             fromid = record.getFromSid();
         }
         for (WebSocketSession user : users) {
-            String username = (String) user.getAttributes().get("WEBSOCKET_USERNAME");
+            String username = user.getAttributes().get("SESSION_USERID").toString();
             Integer userId = Integer.parseInt(username);
             if (userId ==room.getUserId() || userId == room.getServiceId()) {
                 try {
@@ -173,7 +173,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
             System.out.println("one sendMessageToRoom :" + record.getContent());
 
             for (WebSocketSession user : users) {
-                String username = (String) user.getAttributes().get("WEBSOCKET_USERNAME");
+                String username = user.getAttributes().get("SESSION_USERID").toString();
                 if (username.equals(room.getUserId().toString()) || username.equals(room.getServiceId().toString())) {
                     if (user.isOpen()) {
                         RecordMessage recordMessage = new RecordMessage(record);

@@ -1,43 +1,34 @@
 import fetch from '@/fetch';
-import { Toast } from 'mint-ui';
+import {Toast} from 'mint-ui';
 
 const serviceListStore = {
-  state:{
+  state: {
     groupListShow: false,
   },
   actions: {
-    serverlistAction({commit, state},userid){
-      return new Promise((resolve,reject)=>{
-        let params = new URLSearchParams();
-        params.append("userid",userid);
-        fetch({
-          method: 'post',
-          url: '/user/roomlist',
-          data: params
+    serverlistAction({commit, state}, userid) {
+      return new Promise((resolve) => {
+
+        fetch('/user/roomlist', {
+          userid: userid
         }).then((res) => {
           let roomlistv = res.roomlist;
           resolve(roomlistv);
-        }).catch((err) => {
-          Toast({message: err, position: 'bottom', duration: 2000});
-        })
+        });
       })
     },
-    grouplistAction({commit, state}){
-      return new Promise((resolve,reject)=>{
-        fetch({
-          method: 'post',
-          url: '/group/list',
-        }).then((res) => {
-          let groups = res.groups;
-          resolve(groups);
-        }).catch((err) => {
-          Toast({message: err, position: 'bottom', duration: 2000});
-        })
+    grouplistAction({commit, state}) {
+      return new Promise((resolve) => {
+
+        fetch('/group/list', {})
+          .then((res) => {
+            let groups = res.groups;
+            resolve(groups);
+          });
       })
     },
   },
-  mutations: {
-  }
+  mutations: {}
 }
 
 

@@ -15,18 +15,22 @@
 
     <mvc:annotation-driven />
 
-    <!--<mvc:interceptors>-->
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/user/*"/>-->
-            <!--<mvc:exclude-mapping path="/user/login" />-->
-            <!--<bean class="com.interceptors.LoginInterceptor" />-->
-        <!--</mvc:interceptor>-->
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/admin/*"/>-->
-            <!--<mvc:exclude-mapping path="/admin/login" />-->
-            <!--<bean class="com.interceptors.AdminLoginInterceptor" />-->
-        <!--</mvc:interceptor>-->
-    <!--</mvc:interceptors>-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/user/*"/>
+            <mvc:mapping path="/group/*" />
+            <mvc:mapping path="/room/*" />
+            <mvc:mapping path="/service/*" />
+            <mvc:mapping path="/upload/*" />
+            <mvc:exclude-mapping path="/account/*" />
+            <bean class="com.interceptors.LoginInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/*"/>
+            <mvc:exclude-mapping path="/admin/login" />
+            <bean class="com.interceptors.AdminLoginInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <mvc:default-servlet-handler/>
 

@@ -5,79 +5,52 @@ const rootStore = {
   actions: {
     joinRooe({commit, state}, {userId, groupId}) {
       return new Promise((resolve, reject) => {
-        let params = new URLSearchParams();
-        params.append("userid", userId);
-        params.append("groupid", groupId);
-        fetch({
-          method: 'post',
-          url: '/user/joinroom',
-          data: params
+
+        fetch('/user/joinroom', {
+          userid: userId,
+          groupid: groupId
         }).then((res) => {
           resolve(res);
-        }).catch((err) => {
-          Toast({message: err, position: 'bottom', duration: 2000});
         })
       })
     },
     historyMessage({commit, state}, roomid) {
-      return new Promise((resolve, reject) => {
-        let params = new URLSearchParams();
-        params.append("roomid", roomid);
-        fetch({
-          method: 'post',
-          url: '/room/history',
-          data: params
+      return new Promise((resolve) => {
+        fetch('/room/history', {
+          roomid: roomid
         }).then((res) => {
           resolve(res);
-        }).catch((err) => {
-          Toast({message: err, position: 'bottom', duration: 2000});
         })
       })
     },
     getRoomData({commit, state}, roomid) {
-      return new Promise((resolve, reject) => {
-        let params = new URLSearchParams();
-        params.append("roomid", roomid);
-        fetch({
-          method: 'post',
-          url: '/room/getdata',
-          data: params
+      return new Promise((resolve) => {
+        fetch('/room/getdata', {
+          roomid: roomid
         }).then((res) => {
           resolve(res);
-        }).catch((err) => {
-          Toast({message: err, position: 'bottom', duration: 2000});
         })
       })
     },
-    sendMessage({commit, state}, {content,roomid}){
-      return new Promise((resolve, reject) => {
-        let params = new URLSearchParams();
-        params.append("msg", content);
-        params.append("roomid", roomid);
-        fetch({
-          method: 'post',
-          url: '/user/sendmsg',
-          data: params
+    sendMessage({commit, state}, {content, roomid}) {
+      return new Promise((resolve) => {
+
+        fetch('/user/sendmsg', {
+          msg: content,
+          roomid: roomid
         }).then((res) => {
           resolve(res);
-        }).catch((err) => {
-          Toast({message: err, position: 'bottom', duration: 2000});
         })
       })
     },
-    requersService({commit, state}, {userid,roomid}){
-      return new Promise((resolve, reject) => {
-        let params = new URLSearchParams();
-        params.append("userid", userid);
-        params.append("roomid", roomid);
-        fetch({
-          method: 'post',
-          url: '/user/reservice',
-          data: params
+    requersService({commit, state}, {userid, roomid}) {
+      return new Promise((resolve) => {
+
+        fetch('/user/reservice', {
+          userid: userid,
+          roomid: roomid
         }).then((res) => {
           resolve(res);
-        }).catch((err) => {
-          Toast({message: err, position: 'bottom', duration: 2000});
         })
       })
     }

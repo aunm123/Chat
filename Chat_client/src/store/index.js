@@ -18,18 +18,19 @@ function getMemberList() {
 }
 
 const state = {
-  user: {
-    createtime: 1517494883000,
-    email: "asda@email.com",
-    id: 1,
-    isonline: false,
-    isservice: false,
-    lastupdatetime: 1517494884000,
-    name: "qwe",
-    nickname: null,
-    password: "123123",
-    phone: null,
-  },
+  // user: {
+  //   createtime: 1517494883000,
+  //   email: "asda@email.com",
+  //   id: 1,
+  //   isonline: false,
+  //   isservice: false,
+  //   lastupdatetime: 1517494884000,
+  //   name: "qwe",
+  //   nickname: null,
+  //   password: "123123",
+  //   phone: null,
+  // },
+  user: null,
   memberlist: getMemberList(),
   websocketHasConnect: false,
 };

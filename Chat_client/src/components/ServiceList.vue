@@ -48,7 +48,6 @@
         this.initScroll();
       });
       this.getServiceList();
-      this.connectAction();
     },
 
     computed: {
@@ -61,7 +60,6 @@
         'serverlistAction',
         'grouplistAction',
         'joinRooe',
-        'connectAction',
       ]),
       groupClick(group){
         let vm = this;

@@ -50,7 +50,6 @@
       this.getRoomData(this.roomId)
         .then((res) => {
           this.roomData = res.room;
-          this.connectAction();
           this.updateMessage(this.newMessage, false);
         });
 
@@ -81,7 +80,6 @@
         'getRoomData',
         'sendMessage',
         'requersService',
-        'connectAction',
       ]),
       ...mapMutations([
         'updateNewMessage'

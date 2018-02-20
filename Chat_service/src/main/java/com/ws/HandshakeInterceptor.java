@@ -17,19 +17,6 @@ public class HandshakeInterceptor  extends HttpSessionHandshakeInterceptor {
             request.getHeaders().set("Sec-WebSocket-Extensions","permessage-deflate");
         }
 
-        if (request instanceof ServletServerHttpRequest) {
-            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-            HttpSession session = servletRequest.getServletRequest().getSession(false);
-            if (session != null) {
-                // 使用userName区分WebSocketHandler，以便定向发送消息
-                String userName = session.getAttribute("SESSION_USERID").toString();
-                if (userName == null) {
-                    userName = "2" + session.getId();
-                }
-                attributes.put("WEBSOCKET_USERNAME", userName);
-            }
-        }
-
         System.out.println("Before Handshake");
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }

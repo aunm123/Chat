@@ -5,13 +5,19 @@
 </template>
 
 <script>
-  import { mapState, mapMutations, mapActions } from 'vuex'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
   export default {
     name: 'App',
     methods:{
       ...mapMutations([
-        'saveMemberList'
+        'saveMemberList',
+      ]),
+      ...mapGetters([
+       'getUserInfo',
       ])
+    },
+    mounted(){
+
     },
     beforeDestroy() {
       this.saveMemberList();
