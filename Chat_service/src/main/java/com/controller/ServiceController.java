@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping("/service")
@@ -44,6 +46,19 @@ public class ServiceController {
         infoHandler().sendMessageToRoom(room, record);
 
         return ResultData.ok();
+    }
+
+
+    @RequestMapping("/getServiceRoom")
+    @ResponseBody
+    public ResultData getServiceRoom(Integer serviceid) {
+
+        List<Room> rooms = roomMapper.selectByServiceid(serviceid);
+
+        HashMap<String, Object> stringObjectHashMap = new HashMap<String, Object>();
+        stringObjectHashMap.put("rooms", rooms);
+        ResultData resultData = ResultData.SuccessResultData(stringObjectHashMap);
+        return resultData;
     }
 
 }

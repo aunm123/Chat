@@ -20,6 +20,8 @@ public interface RoomMapper {
 
     List<Room> selectByUserid(@Param(value = "userid")Integer userid);
 
+    List<Room> selectByServiceid(@Param(value = "serviceid")Integer serviceid);
+
     int updateByPrimaryKeySelective(Room record);
 
     int updateByPrimaryKey(Room record);

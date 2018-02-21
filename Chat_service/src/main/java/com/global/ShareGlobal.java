@@ -37,8 +37,8 @@ public class ShareGlobal implements InitializingBean {
     @Autowired
     private RecordMapper recordMapper;
 
-    private List<Integer> waiteRoomList;
-    private List<Service> waiteServerList;
+    private List<Integer> waiteRoomList = new LinkedList<Integer>();
+    private List<Service> waiteServerList = new LinkedList<Service>();
 
     public List<Integer> getWaiteRoomList() {
         return waiteRoomList;
@@ -57,9 +57,6 @@ public class ShareGlobal implements InitializingBean {
     }
 
     public void afterPropertiesSet() throws Exception {
-
-        waiteRoomList = new LinkedList<Integer>();
-        waiteServerList = new LinkedList<Service>();
 
         Thread thread = new Thread(new Runnable() {
 

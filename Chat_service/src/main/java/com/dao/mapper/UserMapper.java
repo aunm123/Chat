@@ -1,8 +1,11 @@
 package com.dao.mapper;
 
+import com.pojo.Group;
 import com.pojo.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface UserMapper {
@@ -20,4 +23,6 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    List<User> findAllUser();
 }

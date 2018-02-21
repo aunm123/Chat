@@ -25,15 +25,21 @@ public class LoginInterceptor implements HandlerInterceptor {
                 Integer userid  = Integer.parseInt(userName);
             }catch (Exception e){
                 try {
-                    String toJSONString = JSON.toJSONString(ResultData.FaileResultData("请先登录",102));
-                    response.setContentType("application/json; charset=utf-8");
-                    PrintWriter out = null;
-                    out = response.getWriter();
-                    out.append(toJSONString);
-                    out.close();
-                }catch (Exception e2){
+                    String serviceName = session.getAttribute("SESSION_SERVICEID").toString();
+                    Integer serviceid  = Integer.parseInt(serviceName);
+                }catch (Exception e1){
+                    try {
+                        String toJSONString = JSON.toJSONString(ResultData.FaileResultData("请先登录",102));
+                        response.setContentType("application/json; charset=utf-8");
+                        PrintWriter out = null;
+                        out = response.getWriter();
+                        out.append(toJSONString);
+                        out.close();
+                    }catch (Exception e2){
+                    }
+                    return false;
                 }
-                return false;
+
             }
         }
 

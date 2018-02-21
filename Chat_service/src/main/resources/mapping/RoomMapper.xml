@@ -28,6 +28,12 @@
     from t_room
     where user_id = #{userid,jdbcType=INTEGER}
   </select>
+  <select id="selectByServiceid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_room
+    where service_id = #{serviceid,jdbcType=INTEGER}
+  </select>
   <select id="selectByUseridAndGroupId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>

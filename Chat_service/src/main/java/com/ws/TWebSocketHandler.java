@@ -19,8 +19,50 @@ import java.util.ArrayList;
 
 public class TWebSocketHandler extends TextWebSocketHandler {
 
-    // 已建立连接的用户
+    // 已建立连接的用户(包括客服)
+    private static final ArrayList<WebSocketSession> usersAndservice = new ArrayList<WebSocketSession>();
     private static final ArrayList<WebSocketSession> users = new ArrayList<WebSocketSession>();
+    private static final ArrayList<WebSocketSession> service = new ArrayList<WebSocketSession>();
+
+    public static ArrayList<WebSocketSession> getUsersAndservice() {
+        return usersAndservice;
+    }
+
+    public static ArrayList<WebSocketSession> getUsers() {
+        return users;
+    }
+
+    public static ArrayList<WebSocketSession> getService() {
+        return service;
+    }
+
+    private String getNameFromSession(WebSocketSession session){
+        try {
+            String username = session.getAttributes().get("SESSION_USERID").toString();
+            return username;
+        } catch (Exception e){
+            try {
+                String servicername = session.getAttributes().get("SESSION_SERVICEID").toString();
+                return servicername;
+            } catch (Exception e1){
+                return "";
+            }
+        }
+    }
+
+    private Boolean isUser(WebSocketSession session){
+        try {
+            String username = session.getAttributes().get("SESSION_USERID").toString();
+            return true;
+        } catch (Exception e){
+            try {
+                String servicername = session.getAttributes().get("SESSION_SERVICEID").toString();
+                return false;
+            } catch (Exception e1){
+                return false;
+            }
+        }
+    }
 
     /**
      * 处理前端发送的文本信息 js调用websocket.send时候，会调用该方法
@@ -31,11 +73,9 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String username = session.getAttributes().get("SESSION_USERID").toString();
         // 获取提交过来的消息详情
-        System.out.println("user: " + username + "\n message:" + message.toString());
+        System.out.println("user: " + this.getNameFromSession(session) + "\n message:" + message.toString());
         // 回复一条信息，
-//		session.sendMessage(new TextMessage("reply msg:" + message.getPayload()));
         sendMessageToUsers(message);
     }
 
@@ -47,11 +87,16 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        users.add(session);
-        String username = session.getAttributes().get("SESSION_USERID").toString();
-        System.out.println("user: " + username + " Connectione Established");
 
-        SystemMessage systemMessage = new SystemMessage(username + " connect");
+        usersAndservice.add(session);
+        if (this.isUser(session)){
+            users.add(session);
+        }else {
+            service.add(session);
+        }
+        String name = this.getNameFromSession(session);
+        System.out.println("user: " + name + " Connectione Established");
+        SystemMessage systemMessage = new SystemMessage(name + " connect");
         session.sendMessage(new TextMessage(systemMessage.toJsonString()));
     }
 
@@ -64,9 +109,14 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        String username = session.getAttributes().get("SESSION_USERID").toString();
-        System.out.println("user: " + username + " Connection closed. Status: " + status);
-        users.remove(session);
+        String name = this.getNameFromSession(session);
+        System.out.println("user: " + name + " Connection closed. Status: " + status);
+        usersAndservice.remove(session);
+        if (this.isUser(session)){
+            users.remove(session);
+        }else {
+            service.remove(session);
+        }
     }
 
     /**
@@ -78,13 +128,18 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        String username = session.getAttributes().get("SESSION_USERID").toString();
+        String name = this.getNameFromSession(session);
         if (session.isOpen()) {
             session.close();
         }
-        System.out.println("用户: " + username + " websocket connection closed......");
+        System.out.println("用户: " + name + " websocket connection closed......");
 
-        users.remove(session);
+        usersAndservice.remove(session);
+        if (this.isUser(session)){
+            users.remove(session);
+        }else {
+            service.remove(session);
+        }
     }
 
     /**
@@ -94,7 +149,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     public void sendMessageToUsers(TextMessage message) {
         System.out.println("all sendMessageToUsers :" + message);
-        for (WebSocketSession user : users) {
+        for (WebSocketSession user : usersAndservice) {
             try {
                 if (user.isOpen()) {
                     user.sendMessage(message);
@@ -113,8 +168,9 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     public void sendMessageToUser(String userName, TextMessage message) {
         System.out.println("one sendMessageToUser :" + message);
-        for (WebSocketSession user : users) {
-            if (user.getAttributes().get("SESSION_USERID").equals(userName)) {
+        for (WebSocketSession user : usersAndservice) {
+            String name = this.getNameFromSession(user);
+            if (name.equals(userName)) {
                 try {
                     if (user.isOpen()) {
                         user.sendMessage(message);
@@ -143,9 +199,9 @@ public class TWebSocketHandler extends TextWebSocketHandler {
         } else if (record.getFromSid() != null) {
             fromid = record.getFromSid();
         }
-        for (WebSocketSession user : users) {
-            String username = user.getAttributes().get("SESSION_USERID").toString();
-            Integer userId = Integer.parseInt(username);
+        for (WebSocketSession user : usersAndservice) {
+            String name = this.getNameFromSession(user);
+            Integer userId = Integer.parseInt(name);
             if (userId ==room.getUserId() || userId == room.getServiceId()) {
                 try {
                     if (user.isOpen()) {
@@ -172,9 +228,9 @@ public class TWebSocketHandler extends TextWebSocketHandler {
         try {
             System.out.println("one sendMessageToRoom :" + record.getContent());
 
-            for (WebSocketSession user : users) {
-                String username = user.getAttributes().get("SESSION_USERID").toString();
-                if (username.equals(room.getUserId().toString()) || username.equals(room.getServiceId().toString())) {
+            for (WebSocketSession user : usersAndservice) {
+                String name = this.getNameFromSession(user);
+                if (name.equals(room.getUserId().toString()) || name.equals(room.getServiceId().toString())) {
                     if (user.isOpen()) {
                         RecordMessage recordMessage = new RecordMessage(record);
                         user.sendMessage(new TextMessage(recordMessage.toJsonString()));
