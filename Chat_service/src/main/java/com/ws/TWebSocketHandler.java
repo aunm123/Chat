@@ -10,6 +10,7 @@ import com.pojo.Service;
 import com.pojo.User;
 import com.ws.Message.RecordMessage;
 import com.ws.Message.SystemMessage;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class TWebSocketHandler extends TextWebSocketHandler {
+
+    private static Logger logger = Logger.getLogger(TWebSocketHandler.class);
 
     // 已建立连接的用户(包括客服)
     private static final ArrayList<WebSocketSession> usersAndservice = new ArrayList<WebSocketSession>();
@@ -74,7 +77,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         // 获取提交过来的消息详情
-        System.out.println("user: " + this.getNameFromSession(session) + "\n message:" + message.toString());
+        logger.debug("user: " + this.getNameFromSession(session) + "\n message:" + message.toString());
         // 回复一条信息，
         sendMessageToUsers(message);
     }
@@ -132,7 +135,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
         if (session.isOpen()) {
             session.close();
         }
-        System.out.println("用户: " + name + " websocket connection closed......");
+        logger.debug("用户: " + name + " websocket connection closed......");
 
         usersAndservice.remove(session);
         if (this.isUser(session)){
@@ -148,7 +151,9 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      * @param message
      */
     public void sendMessageToUsers(TextMessage message) {
-        System.out.println("all sendMessageToUsers :" + message);
+
+        logger.debug("all sendMessageToUsers :" + message);
+
         for (WebSocketSession user : usersAndservice) {
             try {
                 if (user.isOpen()) {
@@ -167,7 +172,9 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      * @param message
      */
     public void sendMessageToUser(String userName, TextMessage message) {
-        System.out.println("one sendMessageToUser :" + message);
+
+        logger.debug("one sendMessageToUser :" + message);
+
         for (WebSocketSession user : usersAndservice) {
             String name = this.getNameFromSession(user);
             if (name.equals(userName)) {
@@ -191,7 +198,8 @@ public class TWebSocketHandler extends TextWebSocketHandler {
      */
     @SuppressWarnings("Duplicates")
     public void sendMessageToRoom(Room room, Record record) {
-        System.out.println("one sendMessageToRoom :" + record.getContent());
+
+        logger.debug("one sendMessageToRoom :" + record.getContent());
 
         Integer fromid = null;
         if (record.getFromId() != null) {
@@ -226,7 +234,7 @@ public class TWebSocketHandler extends TextWebSocketHandler {
     @SuppressWarnings("Duplicates")
     public void sendMessageToRoomRoot(Room room, Record record) {
         try {
-            System.out.println("one sendMessageToRoom :" + record.getContent());
+            logger.debug("sys sendMessageToRoom :" + record.getContent());
 
             for (WebSocketSession user : usersAndservice) {
                 String name = this.getNameFromSession(user);

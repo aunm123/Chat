@@ -30,7 +30,7 @@
   //   "fromSid": 3,
   //   "roomId": 1
   // }
-
+  // cat /var/log/secure | awk '/faile/{print $(NF-3)}' | sort | uniq -c | awk '{print $2" = "$1;}'
   export default {
     components: {
       SystemMessage
